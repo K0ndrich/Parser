@@ -13,4 +13,5 @@ response = requests.get(link)  # -> <Response [200]>
 response = requests.get(link).text  # -> 159.224.217.57
 
 # .content возвращет данные с странци в виде байтовой строки 
+# используеться при скачании картики, видео или других файлов
 response = requests.get(link).content  # -> b'159.224.217.57\n'
