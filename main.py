@@ -1,17 +1,38 @@
 # Создаем програму для парсинга сайтов
 import requests
 
+from bs4 import BeautifulSoup
+
 # url-адресс сайта, который просто возвращает наш ip компьютера
-link = "https://icanhazip.com/"
+# link = "https://icanhazip.com/"
+
+link = "https://browser-info.ru/"
 
 # отправляем GET-запрос на наш сайт для получения данных
+response = requests.get(link).text
 
-# возвращает статус(успешность) запроса
-response = requests.get(link)  # -> <Response [200]>
 
-# .text возвращает данные с страници в виде html или json
-response = requests.get(link).text  # -> 159.224.217.57
+# response.status_code)  # -> 200
+# response.text  # -> 159.224.217.57
 
-# .content возвращет данные с странци в виде байтовой строки 
-# используеться при скачании картики, видео или других файлов
-response = requests.get(link).content  # -> b'159.224.217.57\n'
+# soup являеться обьектом BeautifulSoup с которим дальше будем работать для получения данных
+# lxml указивает тип парсера, также еще есть html.parser или html5lib
+soup = BeautifulSoup(response, "lxml")
+
+# берем часть кода html по указаному id
+# find нахоидт только первое значение
+block = soup.find("div", id="tool_padding")
+
+# CHECK JAVA SCRIPT
+# из взятого блока берем внутренний блко по меньше
+check_js = block.find("div", id="javascript_check")
+# find_alL будет находить все значения
+# берем воторой span по индексу
+status_js = check_js.find_all("span")[1].text  # -> выключено
+result_js = f"java script: {status_js}"  # -> java script: выключено
+
+# CHECK FLASH
+check_flash = block.find("div", id="flash_version")
+status_flash = check_flash.find_all("span")[1].text  # -> отсутствует/выключен
+result_flash = f"flash: {status_flash}"  # -> flash: отсутствует/выключен
+print(result_flash)
