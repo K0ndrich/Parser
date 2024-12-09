@@ -3,13 +3,17 @@ import requests
 
 from bs4 import BeautifulSoup
 
+# подменна данных от сайта при запросе на него
+header = {"user-agent": "aaabbbccc"}
+
 # url-адресс сайта, который просто возвращает наш ip компьютера
 # link = "https://icanhazip.com/"
 
 link = "https://browser-info.ru/"
 
 # отправляем GET-запрос на наш сайт для получения данных
-response = requests.get(link).text
+# headers указывает свою шапку запроса, подменяем ответ,данные полученные от сайта
+response = requests.get(link, headers=header).text
 
 
 # response.status_code)  # -> 200
@@ -35,4 +39,13 @@ result_js = f"java script: {status_js}"  # -> java script: выключено
 check_flash = block.find("div", id="flash_version")
 status_flash = check_flash.find_all("span")[1].text  # -> отсутствует/выключен
 result_flash = f"flash: {status_flash}"  # -> flash: отсутствует/выключен
+
+
+# CHEKC USER AGENT
+result_user = block.find("div", id="user_agent").text
+
+
+# PRINT
+print(result_js)
 print(result_flash)
+print(result_user)
